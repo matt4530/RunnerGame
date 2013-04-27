@@ -69,7 +69,7 @@ package com.profusiongames.runner.states
 			//_background.blendMode = BlendMode.NONE;
 			addChild(_player);
 			//_player.blendMode = BlendMode.ADD;
-			filter = _vignette = new VignetteFilter(stage.stageWidth / 2, stage.stageHeight / 2, 1, 2.02, .64)//.98, .60)
+			//filter = _vignette = new VignetteFilter(stage.stageWidth / 2, stage.stageHeight / 2, 1, 2.02, .64)//.98, .60)
 			
 			
 			
@@ -105,7 +105,8 @@ package com.profusiongames.runner.states
 			if(e.keyCode == 83)
 				_vignette.size -= 0.01;
 			
-			trace(_vignette.radius, _vignette.size);
+			if(_vignette)
+				trace(_vignette.radius, _vignette.size);
 		}
 		
 		private function newGame():void
@@ -130,11 +131,11 @@ package com.profusiongames.runner.states
 				_pool.splice(0, 1);
 			}
 			_groupLayer.addChild(tGroup);
-			tGroup.repositionAndDraw(900,stage.stageHeight/2);
+			tGroup.repositionAndDraw(90000,stage.stageHeight/2);
 			tGroup.x = 50;
 			_groups.push(tGroup);
 			
-			_groupLayer.alpha = .3;
+
 			nextPosition = 100 + Math.random() * 150;
 			
 			_player.x = stage.stageWidth / 3;
@@ -168,6 +169,7 @@ package com.profusiongames.runner.states
 				}
 				else
 				{	
+					//var cachedRect:Rectangle = _player.getBounds(this);
 					var cachedRect:Rectangle = _player.getBounds(this);
 					cachedRect.x += speed;
 					cachedRect.y += _player.ySpeed;
