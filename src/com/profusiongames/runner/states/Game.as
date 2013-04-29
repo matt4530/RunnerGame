@@ -280,6 +280,7 @@ package com.profusiongames.runner.states
 			distance += speed;
 			
 			speed = Math.max(10, 10 + int(distance / 3500));
+			_snowParticleSystem.gravityX = -speed*4;
 			_vignette.radius = Math.max(.12,_vignette.radius - .0008);
 			//trace(distance, speed);
 		}

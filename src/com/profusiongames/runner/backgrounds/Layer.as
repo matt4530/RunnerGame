@@ -1,5 +1,6 @@
 package com.profusiongames.runner.backgrounds 
 {
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -17,8 +18,8 @@ package com.profusiongames.runner.backgrounds
 		
 		
 		
-		private var _image1:Quad
-		private var _image2:Quad;
+		private var _image1:DisplayObject
+		private var _image2:DisplayObject;
 		
 		private var _layer:int;
 		private var _parallax:Number;
@@ -36,14 +37,15 @@ package com.profusiongames.runner.backgrounds
 			
 			if (_layer == 1)
 			{
-				var q:Quad = new Quad(800, 600);
+				/*var q:Quad = new Quad(800, 600);
 				var bottomColor:uint = 0x00FF00;
 				var topColor:uint = 0xFFFF00;
 				q.setVertexColor(0, topColor);
 				q.setVertexColor(1, topColor);
 				q.setVertexColor(2, bottomColor);
 				q.setVertexColor(3, bottomColor);
-				_image1 = q;
+				_image1 = q;*/
+				_image1 = new 
 			}
 			else if (_layer == 2)
 			{

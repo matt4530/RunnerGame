@@ -46,17 +46,20 @@ package com.profusiongames.runner.entities
 		private function init(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			
+			var color:uint = 0x2F4F4F;
 			_quad = new Quad(50, 50);
-			_quad.setVertexColor(0, 0xFFFFFF);
-			_quad.setVertexColor(1, 0xFFFFFF);
-			_quad.setVertexColor(2, 0xFFFFFF);
-			_quad.setVertexColor(3, 0xFFFFFF);
+			_quad.setVertexColor(0, color);
+			_quad.setVertexColor(1, color);
+			_quad.setVertexColor(2, color);
+			_quad.setVertexColor(3, color);
 			addChild(_quad);
 			
 			pivotX = _quad.width / 2;
 			pivotY = _quad.height;
 			
-			blendMode = BlendMode.ADD;
+			//blendMode = BlendMode.ADD;
 			
 			
 			
