@@ -1,8 +1,11 @@
 package com.profusiongames.runner.states 
 {
+	import com.greensock.easing.Cubic;
+	import com.greensock.TweenLite;
 	import com.profusiongames.runner.backgrounds.Background;
 	import com.profusiongames.runner.entities.Player;
 	import com.profusiongames.runner.filters.VignetteFilter;
+	import com.profusiongames.runner.items.Orb;
 	import com.profusiongames.runner.tiles.Tile;
 	import com.profusiongames.runner.tiles.TileGroup;
 	import flash.geom.Rectangle;
@@ -22,18 +25,21 @@ package com.profusiongames.runner.states
 	public class Game extends Sprite 
 	{
 		private var _background:Background;
+		private var _orbs:Vector.<Orb> = new Vector.<Orb>();
 		private var _groups:Vector.<TileGroup> = new Vector.<TileGroup>();
 		private var _pool:Vector.<TileGroup> = new Vector.<TileGroup>();
 		private var _player:Player = new Player();
 		
 		private var _vignette:VignetteFilter;
 		
+		private var distance:Number = 0;
 		private var speed:Number = 10;
 		private var nextPosition:int = 0;
 		private var endGame:EndGame;
 		
 		private var _groupLayer:Sprite;
 		
+		private var orbDistance:int = 0;
 		
 		[Embed(source="../../../../../lib/particles/snow/particle.pex", mimeType="application/octet-stream")]
 		private static const SnowConfig:Class;
@@ -60,16 +66,16 @@ package com.profusiongames.runner.states
 			_background.speed = speed;
 			addChild(_background);
 			
-			
+			addChild(_player);
 			
 			_groupLayer = new Sprite();
 			addChild(_groupLayer);
 			
 			
 			//_background.blendMode = BlendMode.NONE;
-			addChild(_player);
+			
 			//_player.blendMode = BlendMode.ADD;
-			//filter = _vignette = new VignetteFilter(stage.stageWidth / 2, stage.stageHeight / 2, 1, 2.02, .64)//.98, .60)
+			filter = _vignette = new VignetteFilter(stage.stageWidth / 2, stage.stageHeight / 2, 1, 2.02, .64)//.98, .60)
 			
 			
 			
@@ -84,10 +90,6 @@ package com.profusiongames.runner.states
 			Starling.juggler.add(_snowParticleSystem);
 			
 			_snowParticleSystem.start();
-			
-			
-			
-			
 			
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, kDown);
@@ -131,10 +133,16 @@ package com.profusiongames.runner.states
 				_pool.splice(0, 1);
 			}
 			_groupLayer.addChild(tGroup);
-			tGroup.repositionAndDraw(90000,stage.stageHeight/2);
+			tGroup.repositionAndDraw(900,stage.stageHeight/2);
 			tGroup.x = 50;
 			_groups.push(tGroup);
 			
+			speed = 10;
+			distance = 0;
+			orbDistance = 1;
+			
+			TweenLite.killTweensOf(_vignette);
+			_vignette.radius = 2.02;
 
 			nextPosition = 100 + Math.random() * 150;
 			
@@ -155,6 +163,9 @@ package com.profusiongames.runner.states
 			var lastPosition:int = 0;
 			var playerCollideWith:TileGroup = null;
 			var g:TileGroup;
+			var cachedRect:Rectangle = _player.getBounds(this);
+			cachedRect.x += speed;
+			cachedRect.y += _player.ySpeed;
 			for (i=0; i < _groups.length; i++)
 			{
 				g = _groups[i];
@@ -170,9 +181,6 @@ package com.profusiongames.runner.states
 				else
 				{	
 					//var cachedRect:Rectangle = _player.getBounds(this);
-					var cachedRect:Rectangle = _player.getBounds(this);
-					cachedRect.x += speed;
-					cachedRect.y += _player.ySpeed;
 					if (playerCollideWith == null && g.getCollisionBounds(this).intersects(cachedRect)) //collision
 					{
 						playerCollideWith = g;
@@ -182,6 +190,29 @@ package com.profusiongames.runner.states
 					{
 						_player.x = g.x - _player.width / 2;
 					}
+				}
+			}
+			
+			/*
+			 * Move orbs
+			 */
+			var orb:Orb;
+			for (i = 0; i < _orbs.length; i++)
+			{
+				orb = _orbs[i];
+				orb.x = Math.ceil(orb.x - speed);
+				if (orb.x < -orb.width)
+				{
+					_groupLayer.removeChild(orb);
+					_orbs.splice(i, 1);
+					i--;
+				}
+				else if (cachedRect.intersects(orb.getBounds(this)))
+				{
+					_vignette.radius = Math.min(2.02, _vignette.radius + .5);
+					_groupLayer.removeChild(orb);
+					_orbs.splice(i, 1);
+					i--;
 				}
 			}
 			
@@ -208,6 +239,19 @@ package com.profusiongames.runner.states
 				_groups.push(g);
 				
 				nextPosition = 200 + Math.random() * 150;
+				
+				
+				orbDistance--;
+				if (orbDistance == 0)
+				{
+					var o:Orb = new Orb();
+					_groupLayer.addChild(o);
+					o.y = g.getPlatformTop() - o.height - 10;
+					o.x = g.x + int(Math.random() * (g.width - 20)) + 10;
+					_orbs.push(o);
+					
+					orbDistance = int(Math.random() * 5) + 2;
+				}
 			}
 			
 			
@@ -225,10 +269,19 @@ package com.profusiongames.runner.states
 				removeEventListener(EnterFrameEvent.ENTER_FRAME, frame);
 				
 				endGame = new EndGame();
+				endGame.distance = distance;
 				stage.addChild(endGame);
+				
+				TweenLite.to(_vignette, 5, { radius:.12, ease:Cubic.easeInOut } );
 				
 				stage.addEventListener(KeyboardEvent.KEY_DOWN, onRestartWait);
 			}
+			
+			distance += speed;
+			
+			speed = Math.max(10, 10 + int(distance / 3500));
+			_vignette.radius = Math.max(.12,_vignette.radius - .0008);
+			//trace(distance, speed);
 		}
 		
 		private function onRestartWait(e:KeyboardEvent):void 

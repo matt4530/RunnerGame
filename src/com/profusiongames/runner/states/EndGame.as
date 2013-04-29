@@ -12,6 +12,8 @@ package com.profusiongames.runner.states
 	{
 		private var _gameOverText:TextField;
 		private var _restartText:TextField;
+		private var _distanceText:TextField;
+		public var distance:Number = 0;
 		public function EndGame() 
 		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -30,6 +32,10 @@ package com.profusiongames.runner.states
 			_restartText.y = stage.stageHeight - _restartText.height;
 			_restartText.hAlign = "center";
 			_restartText.vAlign = "bottom";
+			
+			_distanceText = new TextField(stage.stageWidth, 100, distance + " meters.", "Verdana", 48, 0xFFFFFF);
+			addChild(_distanceText);
+			_distanceText.y = _gameOverText.y + 65;
 		}
 		
 	}
