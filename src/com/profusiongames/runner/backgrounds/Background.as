@@ -33,8 +33,9 @@ package com.profusiongames.runner.backgrounds
 		private function init(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			layer1 = new PerlinLayer(1);
-			//layer1.parallax = 0;
+			//layer1 = new PerlinLayer();
+			layer1 = new Layer(1);
+			layer1.parallax = 0.1;
 			addChild(layer1);
 			
 			layer2 = new Layer(2);
@@ -58,6 +59,7 @@ package com.profusiongames.runner.backgrounds
 			if (layer1.x < -layer1.layerWidth)
 				layer1.x += layer1.layerWidth;
 			*/
+			
 				
 			layer2.x -= Math.ceil(_speed * layer2.parallax);
 			if (layer2.x < -layer2.layerWidth)

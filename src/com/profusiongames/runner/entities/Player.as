@@ -19,7 +19,7 @@ package com.profusiongames.runner.entities
 	{
 		private var _quad:Quad;
 		
-		
+		private var _xSpeed:Number = 0;
 		private var _ySpeed:Number = 0;
 		private var _gravity:Number = 0.7;
 		private var _jumpPower:Number = 6
@@ -46,20 +46,17 @@ package com.profusiongames.runner.entities
 		private function init(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
-			
-			var color:uint = 0x2F4F4F;
 			_quad = new Quad(50, 50);
-			_quad.setVertexColor(0, color);
-			_quad.setVertexColor(1, color);
-			_quad.setVertexColor(2, color);
-			_quad.setVertexColor(3, color);
+			_quad.setVertexColor(0, 0xFFFFFF);
+			_quad.setVertexColor(1, 0xFFFFFF);
+			_quad.setVertexColor(2, 0xFFFFFF);
+			_quad.setVertexColor(3, 0xFFFFFF);
 			addChild(_quad);
 			
 			pivotX = _quad.width / 2;
 			pivotY = _quad.height;
 			
-			//blendMode = BlendMode.ADD;
+			blendMode = BlendMode.ADD;
 			
 			
 			
@@ -100,6 +97,9 @@ package com.profusiongames.runner.entities
 			if (collidedWith != null)
 			{
 				y = collidedWith.getPlatformTop() + 1;//collidedWith.y - collidedWith.height + 1;
+				
+				collidedWith.bleedOn(this);
+				
 				_ySpeed = 0;
 				_hasLandedSinceJump = true;
 				
@@ -133,6 +133,8 @@ package com.profusiongames.runner.entities
 		}
 		
 		public function get ySpeed():Number { return _ySpeed; }
+		public function get xSpeed():Number { return _xSpeed; }
+		public function set xSpeed(value:Number):void { _xSpeed = value; }
 	}
 
 }

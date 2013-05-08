@@ -2,23 +2,33 @@ package com.profusiongames.runner.items
 {
 	import com.greensock.TweenLite;
 	import starling.display.BlendMode;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
+	import starling.textures.Texture;
+	import starling.textures.TextureSmoothing;
 	
 	/**
 	 * ...
 	 * @author UnknownGuardian
 	 */
-	public class Orb extends Quad
+	public class Orb extends Image
 	{
-		
+		[Embed(source = "../../../../../lib/foreground/drops/potion.png")]private static var Potion:Class;
+		private static var staticTexture:Texture;
 		public function Orb() 
 		{
-			super(20, 20, 0xFFFFFF);
-			pivotX = 10;
-			pivotY = 10;
-			blendMode = BlendMode.ADD;
+			if (staticTexture == null)
+				staticTexture = Texture.fromBitmap(new Potion());
+			super(staticTexture);
+			pivotX = staticTexture.width/2;
+			pivotY =0;
+			
+			scaleX = scaleY = 2;
+			smoothing = TextureSmoothing.NONE;
+			
+			//blendMode = BlendMode.ADD;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, kill);
 		}
@@ -31,7 +41,7 @@ package com.profusiongames.runner.items
 		
 		private function frame(e:EnterFrameEvent):void 
 		{
-			rotation += 0.2;
+			//rotation += 0.02;
 			
 		}
 		

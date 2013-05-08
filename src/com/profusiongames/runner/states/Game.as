@@ -22,6 +22,25 @@ package com.profusiongames.runner.states
 	 * ...
 	 * @author UG
 	 */
+	
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	/*
+	 * Blood trail from behind player, where they were at. See Meatboy
+	 * Glow from player - the blood is their life force
+	 * Story: losing consiousness till they fade to black and die
+	 * 
+	 * 	alternate
+	 * 
+	 * Orbs = oil
+	 * Player picks up oil to light lamp, illuminating surrounding
+	 * run out of oil and die
+	 */
 	public class Game extends Sprite 
 	{
 		private var _background:Background;
@@ -48,12 +67,15 @@ package com.profusiongames.runner.states
 		[Embed(source="../../../../../lib/particles/snow/texture.png")]
 		private static const SnowParticle:Class;
 		private var _snowParticleSystem:PDParticleSystem;
+		private var startGame:StartGame;
 		
 		
 		
 		public function Game() 
 		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
+			
+			touchable = false;
 		}
 		
 		private function init(e:Event):void 
@@ -61,6 +83,7 @@ package com.profusiongames.runner.states
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			trace("Added to stage");
+			
 			
 			_background = new Background();
 			_background.speed = speed;
@@ -92,12 +115,34 @@ package com.profusiongames.runner.states
 			_snowParticleSystem.start();
 			
 			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, kDown);
-			newGame();
+			//stage.addEventListener(KeyboardEvent.KEY_DOWN, kDown);
+			//newGame();
+			
+			_vignette.radius = 0.5;
+			startGame = new StartGame();
+			stage.addChild(startGame);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, startGameListener);
+			
+			//x = stage.stageWidth / 2;
+			//y = stage.stageHeight / 2
+			//pivotX = stage.stageWidth / 2
+			//pivotY = stage.stageHeight / 2
+		}
+		
+		private function startGameListener(e:KeyboardEvent):void 
+		{
+			//press x or c
+			if (e.keyCode == 88 || e.keyCode == 67)
+			{
+				e.currentTarget.removeEventListener(KeyboardEvent.KEY_DOWN, startGameListener);
+				stage.removeChild(startGame);
+				newGame();
+			}
 		}
 		
 		private function kDown(e:KeyboardEvent):void 
 		{
+			
 			if (e.keyCode == 38)//up
 				_vignette.radius += 0.01;
 			if (e.keyCode == 40)
@@ -142,7 +187,8 @@ package com.profusiongames.runner.states
 			orbDistance = 1;
 			
 			TweenLite.killTweensOf(_vignette);
-			_vignette.radius = 2.02;
+			TweenLite.to(_vignette, 0.8, { radius:2.02, ease:Cubic.easeInOut } );
+			//_vignette.radius = 2.02;
 
 			nextPosition = 100 + Math.random() * 150;
 			
@@ -154,6 +200,7 @@ package com.profusiongames.runner.states
 		
 		private function frame(e:EnterFrameEvent):void 
 		{
+			//rotation -= 0.001;
 			var i:int = 0
 			
 			
@@ -173,6 +220,7 @@ package com.profusiongames.runner.states
 				lastPosition = g.x + g.width;
 				if (g.x < -g.width)
 				{
+					trace("remove platform");
 					removeChild(g);
 					_pool.push(g);
 					_groups.splice(i, 1);
@@ -246,7 +294,7 @@ package com.profusiongames.runner.states
 				{
 					var o:Orb = new Orb();
 					_groupLayer.addChild(o);
-					o.y = g.getPlatformTop() - o.height - 10;
+					o.y = g.getPlatformTop() - o.height;
 					o.x = g.x + int(Math.random() * (g.width - 20)) + 10;
 					_orbs.push(o);
 					
@@ -256,7 +304,7 @@ package com.profusiongames.runner.states
 			
 			
 			
-			
+			_player.xSpeed = speed;
 			//player update
 			_player.frame(playerCollideWith);
 			
@@ -280,7 +328,6 @@ package com.profusiongames.runner.states
 			distance += speed;
 			
 			speed = Math.max(10, 10 + int(distance / 3500));
-			_snowParticleSystem.gravityX = -speed*4;
 			_vignette.radius = Math.max(.12,_vignette.radius - .0008);
 			//trace(distance, speed);
 		}

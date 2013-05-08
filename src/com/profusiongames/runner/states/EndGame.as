@@ -33,7 +33,7 @@ package com.profusiongames.runner.states
 			_restartText.hAlign = "center";
 			_restartText.vAlign = "bottom";
 			
-			_distanceText = new TextField(stage.stageWidth, 100, distance + " meters.", "Verdana", 48, 0xFFFFFF);
+			_distanceText = new TextField(stage.stageWidth, 100, distance + " pixels.", "Verdana", 48, 0xFFFFFF);
 			addChild(_distanceText);
 			_distanceText.y = _gameOverText.y + 65;
 		}
