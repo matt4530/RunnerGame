@@ -25,7 +25,7 @@ package com.profusiongames.runner
 			
 			starling = new Starling(Game, stage);
 			starling.start();
-			starling.showStatsAt();
+			//starling.showStatsAt();
 		}
 		
 	}

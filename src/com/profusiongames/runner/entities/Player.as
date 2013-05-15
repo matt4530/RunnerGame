@@ -4,6 +4,7 @@ package com.profusiongames.runner.entities
 	import flash.utils.getTimer;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
+	import starling.display.MovieClip;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
@@ -11,6 +12,7 @@ package com.profusiongames.runner.entities
 	import starling.events.KeyboardEvent;
 	import starling.extensions.PDParticleSystem;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	/**
 	 * ...
 	 * @author UnknownGuardian
@@ -29,6 +31,11 @@ package com.profusiongames.runner.entities
 		private var _currentlyJumpIsDown:Boolean = false;
 		private var _frameCountFromJump:int = 0;
 		
+		private var _animation:MovieClip;
+		
+		[Embed(source = "../../../../../lib/foreground/char/char.xml", mimeType = "application/octet-stream")]private var _animXML:Class;
+		[Embed(source="../../../../../lib/foreground/char/char.png")]private var _animTexture:Class;
+		
 		
 		[Embed(source="../../../../../lib/particles/burst/particle.pex", mimeType="application/octet-stream")]
 		private static const BurstConfig:Class;
@@ -46,17 +53,25 @@ package com.profusiongames.runner.entities
 		private function init(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			_quad = new Quad(50, 50);
-			_quad.setVertexColor(0, 0xFFFFFF);
-			_quad.setVertexColor(1, 0xFFFFFF);
-			_quad.setVertexColor(2, 0xFFFFFF);
-			_quad.setVertexColor(3, 0xFFFFFF);
-			addChild(_quad);
 			
-			pivotX = _quad.width / 2;
-			pivotY = _quad.height;
 			
-			blendMode = BlendMode.ADD;
+			
+			
+			
+			var texture:Texture = Texture.fromBitmap(new _animTexture());
+			var xmlData:XML = XML(new _animXML());
+			var textureAtlas:TextureAtlas = new TextureAtlas(texture, xmlData);
+			_animation = new MovieClip(textureAtlas.getTextures("dude"), 20);
+			//addChild(_animation);
+			_animation.currentFrame = 1;
+			addChild(_animation);
+			Starling.juggler.add(_animation);
+			
+			
+			pivotX = _animation.width / 2;// _quad.width / 2;
+			pivotY = _animation.height;// _quad.height;
+			
+			//blendMode = BlendMode.ADD;
 			
 			
 			

@@ -38,7 +38,7 @@ package com.profusiongames.runner.tiles
 			_batch = new QuadBatch();
 			addChild(_batch);
 			
-			alpha = 0.4;
+			
 		}
 		
 		public function bleedOn(p:Player):void

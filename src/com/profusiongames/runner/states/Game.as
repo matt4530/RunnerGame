@@ -8,6 +8,7 @@ package com.profusiongames.runner.states
 	import com.profusiongames.runner.items.Orb;
 	import com.profusiongames.runner.tiles.Tile;
 	import com.profusiongames.runner.tiles.TileGroup;
+	import com.profusiongames.runner.ui.Hud;
 	import flash.geom.Rectangle;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -83,6 +84,10 @@ package com.profusiongames.runner.states
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			trace("Added to stage");
+			
+			stage.addChild(Hud.i);
+			Hud.i.x = stage.stageWidth - Hud.i.width;
+			Hud.i.y = Hud.i.height;
 			
 			
 			_background = new Background();
@@ -185,6 +190,7 @@ package com.profusiongames.runner.states
 			speed = 10;
 			distance = 0;
 			orbDistance = 1;
+			Hud.health = 1;
 			
 			TweenLite.killTweensOf(_vignette);
 			TweenLite.to(_vignette, 0.8, { radius:2.02, ease:Cubic.easeInOut } );
@@ -228,11 +234,17 @@ package com.profusiongames.runner.states
 				}
 				else
 				{	
+					if (_vignette.radius == 0.12)
+					{
+						
+					}
 					//var cachedRect:Rectangle = _player.getBounds(this);
-					if (playerCollideWith == null && g.getCollisionBounds(this).intersects(cachedRect)) //collision
+					else if (playerCollideWith == null && g.getCollisionBounds(this).intersects(cachedRect)) //collision
 					{
 						playerCollideWith = g;
 						g.getCollisionBounds(this);
+						_vignette.radius = Math.max(.12,_vignette.radius - .0045);
+						Hud.health = _vignette.radius / 2.02;
 					}
 					else if (playerCollideWith == null && g.getFallBounds(this).intersects(cachedRect))
 					{
@@ -258,6 +270,7 @@ package com.profusiongames.runner.states
 				else if (cachedRect.intersects(orb.getBounds(this)))
 				{
 					_vignette.radius = Math.min(2.02, _vignette.radius + .5);
+					Hud.health = _vignette.radius / 2.02;
 					_groupLayer.removeChild(orb);
 					_orbs.splice(i, 1);
 					i--;
@@ -290,7 +303,7 @@ package com.profusiongames.runner.states
 				
 				
 				orbDistance--;
-				if (orbDistance == 0)
+				if(orbDistance == 0)
 				{
 					var o:Orb = new Orb();
 					_groupLayer.addChild(o);
@@ -328,7 +341,7 @@ package com.profusiongames.runner.states
 			distance += speed;
 			
 			speed = Math.max(10, 10 + int(distance / 3500));
-			_vignette.radius = Math.max(.12,_vignette.radius - .0008);
+			
 			//trace(distance, speed);
 		}
 		

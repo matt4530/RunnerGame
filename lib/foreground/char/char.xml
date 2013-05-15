@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:1e1255245726f7efef41173cc26a0026$ -->
+<TextureAtlas imagePath="char.png">
+    <SubTexture name="dude_0" x="2" y="2" width="28" height="49"/>
+    <SubTexture name="dude_1" x="2" y="53" width="28" height="49"/>
+    <SubTexture name="dude_2" x="2" y="104" width="28" height="49"/>
+    <SubTexture name="dude_3" x="2" y="155" width="28" height="49"/>
+    <SubTexture name="dude_4" x="2" y="206" width="28" height="49"/>
+    <SubTexture name="dude_5" x="2" y="257" width="28" height="49"/>
+    <SubTexture name="dude_6" x="2" y="308" width="28" height="49"/>
+    <SubTexture name="dude_7" x="2" y="359" width="28" height="49"/>
+    <SubTexture name="dude_8" x="2" y="410" width="28" height="49"/>
+</TextureAtlas>
